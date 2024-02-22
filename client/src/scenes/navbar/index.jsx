@@ -59,7 +59,7 @@ const Navbar = () => {
             },
           }}
         >
-          Sociopedia
+          SocioHub
         </Typography>
         {/* only show search box on non mobile screen */}
         {isNonMobileScreens && (
@@ -80,7 +80,7 @@ const Navbar = () => {
       {/* RIGHTPORTION */}
       {isNonMobileScreens ? (
         // right menu for desktop
-        <FlexBetween>
+        <FlexBetween gap={"1.5rem"}>
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -130,6 +130,8 @@ const Navbar = () => {
           </IconButton>
         </FlexBetween>
       )}
+
+      {/* mobile screen right menu */}
       {isMobileMenuToggled && !isNonMobileScreens && (
         <Box
           position="fixed"

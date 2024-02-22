@@ -1,9 +1,38 @@
-import React from 'react'
-
+import React from "react";
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import Form from "./Form";
 const LoginPage = () => {
-  return (
-    <div>LoginPage</div>
-  )
-}
+  const theme = useTheme();
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  
 
-export default LoginPage
+  return (
+    <Box>
+      <Box
+        width="100%"
+        textAlign="center"
+        p="1rem 6%"
+        backgroundColor={theme.palette.background.alt}
+      >
+        <Typography fontWeight="bold" fontSize="32px" color="primary">
+          SocioHub
+        </Typography>
+      </Box>
+      <Box
+        width={isNonMobileScreens ? "50%" : "93%"}
+        backgroundColor={theme.palette.background.alt}
+        p="2rem"
+        m="2rem auto"
+        borderRadius="1.5rem"
+      >
+        <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
+          Step into SocioHub, where you connect and share memories, one moment
+          at a time!
+        </Typography>
+        <Form/>
+      </Box>
+    </Box>
+  );
+};
+
+export default LoginPage;
