@@ -26,26 +26,17 @@ import {
 import Dropzone from "react-dropzone";
 
 const MyPostWidget = ({ picturePath }) => {
-  //image file uploaded by user
+  const dispatch = useDispatch();
+  const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
-  const [isImage, setIsImage] = useState(false); //if image button is clicked for dropzone to be visible
-  const [post, setPost] = useState(""); //description of post
-
-  //we need id, des and picture in req.body and token for authheader
+  const [post, setPost] = useState("");
+  const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
-
-  const dispatch = useDispatch();
-
-  const { palette } = useTheme();
+  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
 
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-
-  //function to createPost
-  // INSIDE CREATE POST CONTROLLER->const { userId, description, picturePath } = req.body;
-  //for multer upload.single("picture")-> we need to send picture also
   const handlePost = async () => {
     const formData = new FormData();
     formData.append("userId", _id);
@@ -55,15 +46,13 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
 
-    const res = await fetch("/posts", {
+    const response = await fetch(`/posts`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
-    const posts = await res.json();
-    dispatch(setPosts(posts));
+    const posts = await response.json();
+    dispatch(setPosts({ posts }));
     setImage(null);
     setPost("");
   };
@@ -73,9 +62,9 @@ const MyPostWidget = ({ picturePath }) => {
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
-          placeholder="What's on your mind?"
-          value={post}
+          placeholder="What's on your mind..."
           onChange={(e) => setPost(e.target.value)}
+          value={post}
           sx={{
             width: "100%",
             backgroundColor: palette.neutral.light,
@@ -96,7 +85,7 @@ const MyPostWidget = ({ picturePath }) => {
             multiple={false}
             onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
           >
-            {({getRootProps, getInputProps})=>(
+            {({ getRootProps, getInputProps }) => (
               <FlexBetween>
                 <Box
                   {...getRootProps()}
@@ -105,7 +94,7 @@ const MyPostWidget = ({ picturePath }) => {
                   width="100%"
                   sx={{ "&:hover": { cursor: "pointer" } }}
                 >
-                  <input {...getInputProps()}/>
+                  <input {...getInputProps()} />
                   {!image ? (
                     <p>Add Image Here</p>
                   ) : (
@@ -115,20 +104,22 @@ const MyPostWidget = ({ picturePath }) => {
                     </FlexBetween>
                   )}
                 </Box>
-                {image &&
-                <IconButton
-                  onClick={()=>setImage(null)}
-                  sx={{ width: "15%" }}
-                >
-                  <DeleteOutlined/>
-                  </IconButton>}
+                {image && (
+                  <IconButton
+                    onClick={() => setImage(null)}
+                    sx={{ width: "15%" }}
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                )}
               </FlexBetween>
             )}
           </Dropzone>
         </Box>
       )}
+
       <Divider sx={{ margin: "1.25rem 0" }} />
-      {/* ICONS */}
+
       <FlexBetween>
         <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
           <ImageOutlined sx={{ color: mediumMain }} />
@@ -146,10 +137,12 @@ const MyPostWidget = ({ picturePath }) => {
               <GifBoxOutlined sx={{ color: mediumMain }} />
               <Typography color={mediumMain}>Clip</Typography>
             </FlexBetween>
+
             <FlexBetween gap="0.25rem">
               <AttachFileOutlined sx={{ color: mediumMain }} />
               <Typography color={mediumMain}>Attachment</Typography>
             </FlexBetween>
+
             <FlexBetween gap="0.25rem">
               <MicOutlined sx={{ color: mediumMain }} />
               <Typography color={mediumMain}>Audio</Typography>
@@ -160,20 +153,20 @@ const MyPostWidget = ({ picturePath }) => {
             <MoreHorizOutlined sx={{ color: mediumMain }} />
           </FlexBetween>
         )}
+
         <Button
           disabled={!post}
           onClick={handlePost}
           sx={{
-            color: palette.neutral.dark,
+            color: palette.background.alt,
             backgroundColor: palette.primary.main,
             borderRadius: "3rem",
           }}
         >
-          Post
+          POST
         </Button>
       </FlexBetween>
     </WidgetWrapper>
   );
 };
-
 export default MyPostWidget;

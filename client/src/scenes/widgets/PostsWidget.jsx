@@ -7,25 +7,30 @@ import PostWidget from "./PostWidget";
 //userId is the user who created the post
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.token);
   const posts = useSelector((state) => state.posts);
+  const token = useSelector((state) => state.token);
+  console.log(posts)
+  const getPosts = async () => {
+    const response = await fetch("/posts", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
+    dispatch(setPosts({ posts: data }));
+  };
 
   const getUserPosts = async () => {
-    const res = await fetch(`/posts/${userId}/posts`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
+    const response = await fetch(
+      `http://localhost:3001/posts/${userId}/posts`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const data = await response.json();
     dispatch(setPosts({ posts: data }));
   };
-  const getPosts = async () => {
-    const res = await fetch("/posts", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    dispatch(setPosts({ posts: data }));
-  };
+
   useEffect(() => {
     if (isProfile) {
       getUserPosts();
@@ -33,6 +38,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       getPosts();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  
   return (
     <>
       {posts.map(

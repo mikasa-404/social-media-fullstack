@@ -16,10 +16,12 @@ const Friend = ({ friendId, friendPicturePath, name, subtitle }) => {
   const medium = palette.neutral.medium;
   const navigate = useNavigate();
 
+  
   const friends = useSelector((state) => state.user.friends);
   const isFriend = friends.find((friend) => friend._id === friendId);
 
   const { _id } = useSelector((state) => state.user);
+  const isLoggedInUser= Boolean(_id===friendId);
   const token = useSelector((state) => state.token);
   const dispatch = useDispatch();
   //add/remove friend on current user
@@ -63,16 +65,19 @@ const Friend = ({ friendId, friendPicturePath, name, subtitle }) => {
           </Typography>
         </Box>
       </FlexBetween>
-      <IconButton
-        onClick={() => patchFriend()}
-        sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
-      >
-        {isFriend ? (
-          <PersonRemoveOutlined sx={{ color: primaryDark }} />
-        ) : (
-          <PersonAddOutlined sx={{ color: primaryDark }} />
-        )}
-      </IconButton>
+      {isLoggedInUser?(<></>):(
+         <IconButton
+         onClick={() => patchFriend()}
+         sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+       >
+         {isFriend ? (
+           <PersonRemoveOutlined sx={{ color: primaryDark }} />
+         ) : (
+           <PersonAddOutlined sx={{ color: primaryDark }} />
+         )}
+       </IconButton>
+      )}
+     
     </FlexBetween>
   );
 };
