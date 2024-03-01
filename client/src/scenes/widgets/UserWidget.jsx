@@ -26,7 +26,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
   const getUser = async () => {
     //we need to send auth token to get access to user info
-    const response = await fetch(`/users/${userId}`, {
+    const response = await fetch(`https://social-media-fullstack-hyy9.onrender.com/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

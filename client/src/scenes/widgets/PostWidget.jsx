@@ -32,7 +32,7 @@ const PostWidget = ({
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const patchLike = async () => {
-    const response = await fetch(`/posts/${postId}/like`, {
+    const response = await fetch(`https://social-media-fullstack-hyy9.onrender.com/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

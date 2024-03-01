@@ -11,7 +11,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const token = useSelector((state) => state.token);
   console.log(posts)
   const getPosts = async () => {
-    const response = await fetch("/posts", {
+    const response = await fetch("https://social-media-fullstack-hyy9.onrender.com/posts", {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -21,7 +21,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   const getUserPosts = async () => {
     const response = await fetch(
-      `/posts/${userId}/posts`,
+      `https://social-media-fullstack-hyy9.onrender.com/posts/${userId}/posts`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },

@@ -26,7 +26,7 @@ const Friend = ({ friendId, friendPicturePath, name, subtitle }) => {
   const dispatch = useDispatch();
   //add/remove friend on current user
   const patchFriend = async () => {
-    const response = await fetch(`/users/${_id}/${friendId}`, {
+    const response = await fetch(`https://social-media-fullstack-hyy9.onrender.com/users/${_id}/${friendId}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
