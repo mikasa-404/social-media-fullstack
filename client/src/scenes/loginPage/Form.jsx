@@ -7,6 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 import * as yup from "yup";
 import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +48,8 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("register");
+  const [spinner, setSpinner] = useState(false);
+
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
@@ -54,47 +57,61 @@ const Form = () => {
   const { palette } = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   
   const register = async (values, onSubmitProps) => {
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    formData.append("picturePath", values.picture.name);
-
-    const savedUserResponse = await fetch("https://social-media-fullstack-hyy9.onrender.com/auth/register", {
-      method: "POST",
-      body: formData,
-    });
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
-    console.log(savedUser);
-    if(savedUser){
-      setPageType("login");
+    try {
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
+      }
+      formData.append("picturePath", values.picture.name);
+  
+      const savedUserResponse = await fetch("https://social-media-fullstack-hyy9.onrender.com/auth/register", {
+        method: "POST",
+        body: formData,
+      });
+      const savedUser = await savedUserResponse.json();
+      if (savedUser) {
+        setPageType("login");
+      }
+    } catch (error) {
+      console.error('Register error:', error);
+    } finally {
+      // Set spinner to false here
+      setSpinner(false);
+      // Reset form
+      onSubmitProps.resetForm();
     }
   };
+  
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("https://social-media-fullstack-hyy9.onrender.com/auth/login",{
-      method: 'POST',
-      headers:{
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(values),
-    });
-    const loggedIn= await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if(loggedIn){
-      dispatch(setLogin({
-        user: loggedIn.user,
-        token: loggedIn.token,
-      }));
-      navigate("/home");
+    try {
+      const loggedInResponse = await fetch("https://social-media-fullstack-hyy9.onrender.com/auth/login", {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(values),
+      });
+      const loggedIn = await loggedInResponse.json();
+      if (loggedIn) {
+        dispatch(setLogin({
+          user: loggedIn.user,
+          token: loggedIn.token,
+        }));
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    } finally {
+      setSpinner(false);
+      onSubmitProps.resetForm();
     }
-
   };
+  
 
   const handleFormSubmit = async (values, onSubmitProps) => {
+    setSpinner(true);
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
@@ -252,6 +269,7 @@ const Form = () => {
             >
               {isLogin ? "Login" : "Register"}
             </Button>
+            
             <Typography
               onClick={() => {
                 setPageType(isLogin ? "register" : "login");
@@ -270,6 +288,12 @@ const Form = () => {
                 ? "Don't have an account? Sign Up here."
                 : "Already have an account? Login here."}
             </Typography>
+            {
+              spinner && 
+              <Box sx={{ display: 'flex', justifyContent: "center" }}>
+              <CircularProgress />
+              </Box>
+            }
           </Box>
         </form>
       )}
