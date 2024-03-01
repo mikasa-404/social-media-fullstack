@@ -8,7 +8,7 @@ import { setFriends } from "state";
 import UserImage from "./UserImage";
 import { useNavigate } from "react-router-dom";
 
-const Friend = ({ friendId, friendPicturePath, name, subtitle }) => {
+const Friend = ({ friendId, friendPicturePath, name, subtitle,isProfile }) => {
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
@@ -65,7 +65,7 @@ const Friend = ({ friendId, friendPicturePath, name, subtitle }) => {
           </Typography>
         </Box>
       </FlexBetween>
-      {isLoggedInUser?(<></>):(
+      {isLoggedInUser || isProfile ?(<></>):(
          <IconButton
          onClick={() => patchFriend()}
          sx={{ backgroundColor: primaryLight, p: "0.6rem" }}

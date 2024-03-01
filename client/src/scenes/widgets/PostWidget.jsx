@@ -23,6 +23,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  isProfile
 }) => {
   const [isComments, setIsComments] = useState(false);
   const loggedInUserId = useSelector((state) => state.user._id);
@@ -54,6 +55,7 @@ const PostWidget = ({
         friendPicturePath={userPicturePath}
         name={name}
         subtitle={location}
+        isProfile={isProfile}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
