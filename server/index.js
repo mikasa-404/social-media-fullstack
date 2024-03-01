@@ -35,7 +35,7 @@ app.use(bodyParser.json({limit: "30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 
 app.use(cors({
-  origin: ["https://social-media-frontend-sand.vercel.app/","http://localhost:3000"],
+  origin: ["https://social-media-frontend-sand.vercel.app","http://localhost:3000"],
   methods:['GET', 'POST', 'PATCH'],
   credentials: true,
 }));
